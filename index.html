@@ -88,7 +88,7 @@
       var reader = new FileReader();
       reader.onload = function(e) {
         var data = new Uint8Array(e.target.result);
-               var workbook = XLSX.read(data, {type: 'array'});
+                           var workbook = XLSX.read(data, {type: 'array'});
         var firstSheet = workbook.Sheets[workbook.SheetNames[0]];
         var data = XLSX.utils.sheet_to_json(firstSheet, {header:1});
 
@@ -100,7 +100,16 @@
         for (var i = 1; i < data.length; i++) {
           tableHTML += "<tr>";
           for (var j = 0; j < data[i].length; j++) {
-            tableHTML += "<td>" + data[i][j] + "</td>";
+            if (typeof data[i][j] === 'boolean') {
+              var checkbox = document.createElement("div");
+              checkbox.classList.add("checkbox");
+              if (data[i][j]) {
+                checkbox.classList.add("true");
+              }
+              tableHTML += "<td>" + checkbox.outerHTML + "</td>";
+            } else {
+              tableHTML += "<td>" + data[i][j] + "</td>";
+            }
           }
           tableHTML += "</tr>";
         }
@@ -143,7 +152,7 @@
 
     table.addEventListener('click', function(event) {
       var target = event.target;
-      while (target && target.tagName !== "TD") {
+       while (target && target.tagName !=="TD") {
         target = target.parentNode;
       }
       if (!target) {
@@ -205,7 +214,6 @@
     table.getElementsByTagName("tr")[targetRowIndex].children[targetIndex + 1].click();
   }
 });
-
   </script>
 </body>
 </html>
